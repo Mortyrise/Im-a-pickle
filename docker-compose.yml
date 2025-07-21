@@ -20,6 +20,7 @@ services:
     restart: always
     volumes:
       - db_data:/var/lib/postgresql/data
+      - ./api/init.sql:/docker-entrypoint-initdb.d/init.sql
   node:
     image: node:22
     container_name: api
