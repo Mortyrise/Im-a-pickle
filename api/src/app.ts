@@ -1,12 +1,41 @@
+
 import express from 'express';
+import authRoutes from './application/routes/authRoutes';
+import debugRoutes from './application/routes/debugRoutes';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJSDoc from 'swagger-jsdoc';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware para parsear JSON
 app.use(express.json());
 
-// Ruta de salud
+
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Rick and Morty API',
+      version: '1.0.0',
+      description: 'API para Rick and Morty con autenticación',
+    },
+    servers: [
+      {
+        url: 'http://localhost:' + PORT,
+      },
+    ],
+  },
+  apis: ['./src/application/routes/*.ts'],
+};
+const swaggerSpec = swaggerJSDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+
+app.use('/auth', authRoutes);
+app.use('/debug', debugRoutes);
+
+
+
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running' });
 });
