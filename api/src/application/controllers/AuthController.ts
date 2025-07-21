@@ -2,11 +2,12 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { User } from '../../domain/models/User';
 import { PgUserRepository } from '../../infrastructure/repositories/PgUserRepository';
 import { pool } from '../../infrastructure/database/pgPool';
+import { UserService } from '../services/UserService';
 
 const userRepository = new PgUserRepository(pool);
+const userService = new UserService(userRepository);
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
 
 export class AuthController {
@@ -17,16 +18,17 @@ export class AuthController {
         console.warn('Register failed: Missing fields');
         return res.status(400).json({ message: 'Missing fields' });
       }
-      const userExists = await userRepository.findByEmail(email);
-      if (userExists) {
-        console.warn(`Register failed: User already exists (${email})`);
-        return res.status(409).json({ message: 'User already exists' });
+      try {
+        const newUser = await userService.registerUser(username, email, password);
+        console.info(`User registered successfully: ${newUser.username} (${newUser.email})`);
+        res.status(201).json({ message: 'User registered' });
+      } catch (err: any) {
+        if (err.message === 'User already exists') {
+          console.warn(`Register failed: User already exists (${email})`);
+          return res.status(409).json({ message: 'User already exists' });
+        }
+        throw err;
       }
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const newUser = User.create(username, email, hashedPassword);
-      await userRepository.save(newUser);
-      console.info(`User registered successfully: ${newUser.username} (${newUser.email})`);
-      res.status(201).json({ message: 'User registered' });
     } catch (error) {
       console.error('Register error:', error);
       res.status(500).json({ message: 'Internal server error' });
