@@ -1,11 +1,8 @@
-
-
 import express from 'express';
 import cors from 'cors';
 import authRoutes from './application/routes/authRoutes';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
-
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -45,7 +42,6 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running' });
 });
 
-// Iniciar el servidor
 app.listen(PORT, () => {
   console.log(`🎉 Look Morty im a pickle!! and more boring stuff -> Server is running on port ${PORT}`);
   console.log(`📍 Access the API at: http://localhost:${PORT}`);
