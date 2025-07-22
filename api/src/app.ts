@@ -1,13 +1,19 @@
 
+
 import express from 'express';
+import cors from 'cors';
 import authRoutes from './application/routes/authRoutes';
-import debugRoutes from './application/routes/debugRoutes';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
 app.use(express.json());
 
 
@@ -32,7 +38,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 app.use('/auth', authRoutes);
-app.use('/debug', debugRoutes);
 
 
 
