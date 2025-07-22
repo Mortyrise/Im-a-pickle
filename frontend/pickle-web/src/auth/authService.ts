@@ -1,6 +1,6 @@
 
-import { apiCaller } from './apiCaller';
-import { API_BASE_URL } from './config';
+import { apiCaller } from '../utils/apiCaller';
+import { API_BASE_URL } from '../config';
 
 export async function login(email: string, password: string): Promise<{ access_token: string }> {
   return apiCaller(`${API_BASE_URL}/auth/login`, {

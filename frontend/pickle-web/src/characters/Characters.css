@@ -1,0 +1,36 @@
+.characters-container {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 32px #0001, 0 1.5px 6px #00b5cc22;
+  max-width: 420px;
+  margin: 4rem auto;
+  padding: 2.5rem 2rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.2rem;
+  border: 1.5px solid #e6e6e6;
+}
+.characters-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+.characters-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.character-item {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.character-img {
+  width: 48px;
+  border-radius: 8px;
+}

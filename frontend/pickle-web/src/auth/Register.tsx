@@ -15,7 +15,7 @@ const Register: React.FC = () => {
     setError('');
     setSuccess('');
     if (password !== confirm) {
-      setError('Las contraseñas no coinciden');
+      setError('Passwords do not match');
       return;
     }
     setLoading(true);
@@ -24,12 +24,12 @@ const Register: React.FC = () => {
         method: 'POST',
         body: { email, password },
       });
-      setSuccess('¡Registro exitoso! Ya puedes iniciar sesión.');
+      setSuccess('Registration successful! You can now log in.');
       setEmail('');
       setPassword('');
       setConfirm('');
     } catch (err: any) {
-      setError(err.message || 'Error de red');
+      setError(err.message || 'Network error');
     } finally {
       setLoading(false);
     }
@@ -37,7 +37,7 @@ const Register: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit} className="portal">
-      <h2 className="rick-font">Registro</h2>
+    <h2 className="rick-font">Register</h2>
       <input
         type="email"
         placeholder="Email"
@@ -48,7 +48,7 @@ const Register: React.FC = () => {
       />
       <input
         type="password"
-        placeholder="Contraseña"
+        placeholder="Password"
         value={password}
         onChange={e => setPassword(e.target.value)}
         required
@@ -56,13 +56,13 @@ const Register: React.FC = () => {
       />
       <input
         type="password"
-        placeholder="Repite la contraseña"
+        placeholder="Repeat password"
         value={confirm}
         onChange={e => setConfirm(e.target.value)}
         required
         className="input-style"
       />
-      <button type="submit" disabled={loading} className="button-style">{loading ? 'Registrando...' : 'Registrarse'}</button>
+      <button type="submit" disabled={loading} className="button-style">{loading ? 'Registering...' : 'Register'}</button>
       {error && <div className="error-msg">{error}</div>}
       {success && <div style={{ color: '#00b5cc', fontWeight: 'bold' }}>{success}</div>}
     </form>
