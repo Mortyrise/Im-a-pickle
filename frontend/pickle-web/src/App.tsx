@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import AuthForm from './auth/AuthForm';
 import Characters from './characters/Characters';
+import CharacterDetail from './characters/CharacterDetail';
 import ProtectedRoute from './utils/ProtectedRoute';
 
 const App: React.FC = () => {
@@ -13,6 +14,11 @@ const App: React.FC = () => {
           <Route path="/characters" element={
             <ProtectedRoute>
               <Characters />
+            </ProtectedRoute>
+          } />
+          <Route path="/characters/:id" element={
+            <ProtectedRoute>
+              <CharacterDetail />
             </ProtectedRoute>
           } />
           <Route path="*" element={<Navigate to="/login" replace />} />
