@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Characters.css';
 import { getCharacters, Character } from './charactersService';
 
 const Characters: React.FC = () => {
+  const navigate = useNavigate();
   const [characters, setCharacters] = useState<Character[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -24,10 +26,9 @@ const Characters: React.FC = () => {
       <div className="characters-title">Characters</div>
       <ul className="characters-list">
         {characters.map(c => (
-          <li key={c.id} className="character-item">
+          <li key={c.id} className="character-item" onClick={() => navigate(`/characters/${c.id}`)}>
             {c.image && <img src={c.image} alt={c.name} className="character-img" />}
             <div className="character-info">
-           
               <span className="character-name">{c.name}</span>
               <span className="character-details">{c.status} - {c.species}</span>
               <span className="character-origin">Origin: {c.origin.name}</span>

@@ -1,0 +1,123 @@
+.character-detail-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.back-button {
+  background: rgba(0, 181, 204, 0.1);
+  border: 1px solid #00b5cc;
+  color: #00b5cc;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background: #00b5cc;
+  color: white;
+}
+
+.character-detail-card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 32px #0001, 0 1.5px 6px #00b5cc22;
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+  border: 1.5px solid #e6e6e6;
+}
+
+.character-detail-image img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.character-detail-name {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.5px;
+}
+
+.character-detail-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.stat-item:last-child {
+  border-bottom: none;
+}
+
+.stat-label {
+  font-weight: 600;
+  color: #666;
+  min-width: 80px;
+}
+
+.stat-value {
+  font-weight: 500;
+  color: #222;
+  text-align: right;
+  flex: 1;
+}
+
+.status-alive {
+  color: #4CAF50 !important;
+}
+
+.status-dead {
+  color: #F44336 !important;
+}
+
+.status-unknown {
+  color: #FF9800 !important;
+}
+
+.character-detail-loading,
+.character-detail-error {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.character-detail-error {
+  color: #F44336;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .character-detail-card {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+  }
+  
+  .character-detail-name {
+    font-size: 2rem;
+    text-align: center;
+  }
+  
+  .character-detail-image {
+    text-align: center;
+  }
+  
+  .character-detail-image img {
+    max-width: 250px;
+  }
+}

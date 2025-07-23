@@ -28,3 +28,10 @@ export async function getCharacters(token: string): Promise<Character[]> {
   });
   return data.characters || [];
 }
+
+export async function getCharacterById(id: number, token: string): Promise<Character> {
+  const data = await apiCaller<Character>(`${API_BASE_URL}/api/characters/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return data;
+}
