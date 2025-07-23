@@ -1,53 +1,292 @@
 .favorite-button {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid #ddd;
-  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.favorite-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0, 212, 170, 0.2) 0%, rgba(96, 165, 250, 0.2) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .favorite-button:hover {
-  background: white;
   transform: scale(1.1);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border-color: rgba(0, 212, 170, 0.6);
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(0, 212, 170, 0.4);
+}
+
+.favorite-button:hover::before {
+  opacity: 1;
 }
 
 .favorite-button.small {
-  width: 24px;
-  height: 24px;
-  font-size: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
 }
 
 .favorite-button.medium {
-  width: 32px;
-  height: 32px;
-  font-size: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 16px;
 }
 
 .favorite-button.large {
-  width: 40px;
-  height: 40px;
-  font-size: 20px;
+  width: 52px;
+  height: 52px;
+  border-radius: 20px;
 }
 
-.star-icon {
-  transition: all 0.3s ease;
-  color: #ccc;
+/* Portal Icon Styles */
+.portal-icon {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
 }
 
-.favorite-button.favorited .star-icon {
-  color: #FFD700;
-  text-shadow: 0 0 4px rgba(255, 215, 0, 0.5);
+.portal-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.favorite-button:hover .star-icon {
-  color: #FFD700;
+.outer-ring {
+  width: 24px;
+  height: 24px;
+  animation: portalRotate 8s linear infinite;
+}
+
+.inner-ring {
+  width: 16px;
+  height: 16px;
+  border-color: rgba(255, 255, 255, 0.4);
+  animation: portalRotate 6s linear infinite reverse;
+}
+
+.portal-center {
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 70%, transparent 100%);
+  border-radius: 50%;
+  position: relative;
+  box-shadow: 
+    0 0 4px rgba(255, 255, 255, 0.3);
+  transition: all 0.4s ease;
+}
+
+/* Size adjustments for portal icon */
+.favorite-button.small .outer-ring {
+  width: 18px;
+  height: 18px;
+}
+
+.favorite-button.small .inner-ring {
+  width: 12px;
+  height: 12px;
+}
+
+.favorite-button.small .portal-center {
+  width: 6px;
+  height: 6px;
+}
+
+.favorite-button.large .outer-ring {
+  width: 28px;
+  height: 28px;
+}
+
+.favorite-button.large .inner-ring {
+  width: 20px;
+  height: 20px;
+}
+
+.favorite-button.large .portal-center {
+  width: 10px;
+  height: 10px;
+}
+
+/* Favorited state - portal becomes more intense */
+.favorite-button.favorited .portal-ring {
+  border-color: #00d4aa;
+  border-width: 3px;
+  box-shadow: 
+    0 0 12px rgba(0, 212, 170, 0.8),
+    0 0 20px rgba(0, 212, 170, 0.4),
+    inset 0 0 6px rgba(0, 212, 170, 0.3);
+}
+
+.favorite-button.favorited .outer-ring {
+  animation: portalRotate 3s linear infinite, portalPulse 1.5s ease-in-out infinite alternate;
+  border-color: #00d4aa;
+}
+
+.favorite-button.favorited .inner-ring {
+  animation: portalRotate 2s linear infinite reverse, portalPulse 1.5s ease-in-out infinite alternate;
+  border-color: #60a5fa;
+  border-width: 3px;
+}
+
+.favorite-button.favorited .portal-center {
+  background: radial-gradient(circle, #00d4aa 0%, rgba(0, 212, 170, 0.9) 30%, rgba(96, 165, 250, 0.6) 70%, rgba(0, 212, 170, 0.2) 100%);
+  box-shadow: 
+    0 0 20px rgba(0, 212, 170, 1),
+    0 0 30px rgba(0, 212, 170, 0.6),
+    0 0 40px rgba(96, 165, 250, 0.4),
+    inset 0 0 10px rgba(0, 212, 170, 0.8);
+  animation: portalCenterGlow 1.5s ease-in-out infinite alternate;
+  transform: scale(1.3);
+}
+
+/* Add a special glow effect to the whole button when favorited */
+.favorite-button.favorited {
+  background: rgba(0, 212, 170, 0.15);
+  border-color: rgba(0, 212, 170, 0.4);
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.3),
+    0 0 30px rgba(0, 212, 170, 0.6),
+    0 0 50px rgba(0, 212, 170, 0.3);
+}
+
+/* Hover effects */
+.favorite-button:hover .portal-ring {
+  border-color: rgba(0, 212, 170, 0.6);
+  transform: scale(1.05);
+}
+
+.favorite-button:hover .portal-center {
+  background: radial-gradient(circle, rgba(0, 212, 170, 0.6) 0%, rgba(0, 212, 170, 0.3) 70%, transparent 100%);
+  box-shadow: 
+    0 0 8px rgba(0, 212, 170, 0.5);
+  transform: scale(1.1);
+}
+
+/* Enhanced hover for favorited buttons */
+.favorite-button.favorited:hover .portal-ring {
+  border-color: #00d4aa;
+  transform: scale(1.1);
+  box-shadow: 
+    0 0 15px rgba(0, 212, 170, 1),
+    0 0 25px rgba(0, 212, 170, 0.6),
+    inset 0 0 8px rgba(0, 212, 170, 0.4);
+}
+
+.favorite-button.favorited:hover .portal-center {
+  transform: scale(1.5);
+  box-shadow: 
+    0 0 25px rgba(0, 212, 170, 1),
+    0 0 40px rgba(0, 212, 170, 0.8),
+    0 0 60px rgba(96, 165, 250, 0.6),
+    inset 0 0 12px rgba(0, 212, 170, 1);
+}
+
+/* Portal animations */
+@keyframes portalRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes portalPulse {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes portalCenterGlow {
+  0% {
+    box-shadow: 
+      0 0 20px rgba(0, 212, 170, 1),
+      0 0 30px rgba(0, 212, 170, 0.6),
+      0 0 40px rgba(96, 165, 250, 0.4),
+      inset 0 0 10px rgba(0, 212, 170, 0.8);
+  }
+  100% {
+    box-shadow: 
+      0 0 30px rgba(0, 212, 170, 1),
+      0 0 50px rgba(0, 212, 170, 0.8),
+      0 0 70px rgba(96, 165, 250, 0.6),
+      0 0 90px rgba(0, 212, 170, 0.3),
+      inset 0 0 15px rgba(0, 212, 170, 1);
+  }
 }
 
 .favorite-button:active {
   transform: scale(0.95);
+}
+
+/* Custom Tooltip */
+.tooltip {
+  position: absolute;
+  bottom: -45px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  border: 1px solid rgba(0, 212, 170, 0.3);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 0 8px rgba(0, 212, 170, 0.2);
+}
+
+.tooltip::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid rgba(0, 0, 0, 0.9);
+}
+
+.favorite-button:hover .tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-5px);
+}
+
+.favorite-button.favorited .tooltip {
+  border-color: rgba(0, 212, 170, 0.6);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 0 12px rgba(0, 212, 170, 0.4);
 }

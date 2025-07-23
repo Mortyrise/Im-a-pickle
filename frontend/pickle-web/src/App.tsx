@@ -5,12 +5,13 @@ import Characters from './characters/Characters';
 import CharacterDetail from './characters/CharacterDetail';
 import ProtectedRoute from './utils/ProtectedRoute';
 import { FavoritesProvider } from './characters/FavoritesContext';
+import './App.css';
 
 const App: React.FC = () => {
   return (
     <BrowserRouter>
       <FavoritesProvider>
-        <div className="App" style={{ minHeight: '100vh', background: 'linear-gradient(120deg, #f8f8f8 0%, #e6f7fa 100%)' }}>
+        <div className="App">
           <Routes>
             <Route path="/login" element={<AuthForm />} />
             <Route path="/characters" element={

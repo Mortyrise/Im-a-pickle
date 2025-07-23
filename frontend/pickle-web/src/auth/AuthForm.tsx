@@ -49,7 +49,10 @@ const AuthForm: React.FC = () => {
 
   return (
     <form className="auth-container" onSubmit={handleSubmit}>
-      <div className="auth-title">{mode === 'login' ? 'Sign in' : 'Create account'}</div>
+      <div className="auth-title">
+        {mode === 'login' ? 'Welcome Back' : 'Join the Adventure'}
+      </div>
+      <div className="auth-subtitle">Rick & Morty Character Explorer</div>
       {mode === 'register' && (
         <input
           type="text"

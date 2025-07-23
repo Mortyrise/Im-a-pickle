@@ -19,11 +19,16 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
         e.stopPropagation();
         onToggle();
       }}
-      title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+      title={isFavorite ? 'Remove from favorites (Portal activated)' : 'Add to favorites (Activate portal)'}
     >
-      <span className="star-icon">
-        {isFavorite ? '★' : '☆'}
-      </span>
+      <div className="portal-icon">
+        <div className="portal-ring outer-ring"></div>
+        <div className="portal-ring inner-ring"></div>
+        <div className="portal-center"></div>
+      </div>
+      <div className="tooltip">
+        {isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+      </div>
     </button>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Characters.css';
 import { getCharacters, Character } from './charactersService';
@@ -12,6 +12,16 @@ const Characters: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
+  const scrollRef = useRef<HTMLUListElement>(null);
+
+  // Manejo del scroll horizontal con rueda del ratón
+  const handleWheel = (e: React.WheelEvent) => {
+    if (scrollRef.current) {
+      e.preventDefault();
+      const scrollAmount = e.deltaY * 2; // Multiplica para hacer el scroll más sensible
+      scrollRef.current.scrollLeft += scrollAmount;
+    }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -50,28 +60,33 @@ const Characters: React.FC = () => {
       {showOnlyFavorites && displayedCharacters.length === 0 && (
         <div className="no-favorites">
           <p>No favorite characters yet!</p>
-          <p>Click the ★ button to add characters to your favorites.</p>
+          <p>Click the portal button to add characters to your favorites.</p>
         </div>
       )}
       
-      <ul className="characters-list">
+      <ul 
+        className="characters-list" 
+        ref={scrollRef}
+        onWheel={handleWheel}
+      >
         {displayedCharacters.map(c => (
           <li key={c.id} className="character-item" onClick={() => navigate(`/characters/${c.id}`)}>
             {c.image && <img src={c.image} alt={c.name} className="character-img" />}
             <div className="character-info">
-              <span className="character-name">{c.name}</span>
+              <div className="character-header-inline">
+                <span className="character-name">{c.name}</span>
+                <FavoriteButton
+                  isFavorite={isFavorite(c.id)}
+                  onToggle={() => toggleFavorite({
+                    id: c.id,
+                    name: c.name,
+                    image: c.image
+                  })}
+                  size="small"
+                />
+              </div>
               <span className="character-details">{c.status} - {c.species}</span>
               <span className="character-origin">Origin: {c.origin.name}</span>
-            </div>
-            <div className="character-actions">
-              <FavoriteButton
-                isFavorite={isFavorite(c.id)}
-                onToggle={() => toggleFavorite({
-                  id: c.id,
-                  name: c.name,
-                  image: c.image
-                })}
-              />
             </div>
           </li>
         ))}
