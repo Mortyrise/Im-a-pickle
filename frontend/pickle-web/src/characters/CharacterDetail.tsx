@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getCharacterById, Character } from './charactersService';
+import { useFavorites } from './FavoritesContext';
+import FavoriteButton from './FavoriteButton';
 import './CharacterDetail.css';
 
 const CharacterDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { isFavorite, toggleFavorite } = useFavorites();
   const [character, setCharacter] = useState<Character | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -41,7 +44,17 @@ const CharacterDetail: React.FC = () => {
         </div>
         
         <div className="character-detail-info">
-          <h1 className="character-detail-name">{character.name}</h1>
+          <div className="character-header">
+            <h1 className="character-detail-name">{character.name}</h1>
+            <FavoriteButton 
+              isFavorite={isFavorite(character.id)}
+              onToggle={() => toggleFavorite({
+                id: character.id,
+                name: character.name,
+                image: character.image
+              })}
+            />
+          </div>
           
           <div className="character-detail-stats">
             <div className="stat-item">
