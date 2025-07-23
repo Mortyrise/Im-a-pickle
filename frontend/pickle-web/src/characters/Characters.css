@@ -29,8 +29,44 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  padding: 12px;
+  background: rgba(0, 181, 204, 0.05);
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
+
+.character-item:hover {
+  background: rgba(0, 181, 204, 0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 181, 204, 0.2);
+}
+
 .character-img {
   width: 48px;
+  height: 48px;
   border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.character-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.character-name {
+  font-weight: 600;
+  color: #222;
+  font-size: 1rem;
+}
+
+.character-details {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.character-origin {
+  color: #999;
+  font-size: 0.8rem;
+  font-style: italic;
 }

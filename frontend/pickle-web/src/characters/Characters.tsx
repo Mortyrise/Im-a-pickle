@@ -26,7 +26,12 @@ const Characters: React.FC = () => {
         {characters.map(c => (
           <li key={c.id} className="character-item">
             {c.image && <img src={c.image} alt={c.name} className="character-img" />}
-            <span>{c.name}</span>
+            <div className="character-info">
+           
+              <span className="character-name">{c.name}</span>
+              <span className="character-details">{c.status} - {c.species}</span>
+              <span className="character-origin">Origin: {c.origin.name}</span>
+            </div>
           </li>
         ))}
       </ul>
