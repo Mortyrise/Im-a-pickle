@@ -1,32 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getCharacterById, Character } from './charactersService';
-import { useFavorites } from './FavoritesContext';
+import { useFavorites } from './useFavorites';
+import { useAuth } from '../auth/AuthContext';
 import FavoriteButton from './FavoriteButton';
 import './CharacterDetail.css';
 
 const CharacterDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { token, logout } = useAuth();
   const { isFavorite, toggleFavorite } = useFavorites();
   const [character, setCharacter] = useState<Character | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!id) return;
-    
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/login');
-      return;
-    }
+    if (!id || !token) return;
 
     getCharacterById(Number(id), token)
       .then(setCharacter)
-      .catch(() => setError('Failed to load character'))
+      .catch((error) => {
+        if (error.message === 'Invalid or expired token') {
+          logout();
+        } else {
+          setError('Failed to load character');
+        }
+      })
       .finally(() => setLoading(false));
-  }, [id, navigate]);
+  }, [id, token, logout]);
 
   if (loading) return <div className="character-detail-loading">Loading character...</div>;
   if (error) return <div className="character-detail-error">{error}</div>;

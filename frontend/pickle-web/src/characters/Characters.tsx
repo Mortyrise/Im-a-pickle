@@ -2,11 +2,13 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Characters.css';
 import { getCharacters, Character } from './charactersService';
-import { useFavorites } from './FavoritesContext';
+import { useFavorites } from './useFavorites';
+import { useAuth } from '../auth/AuthContext';
 import FavoriteButton from './FavoriteButton';
 
 const Characters: React.FC = () => {
   const navigate = useNavigate();
+  const { token, logout } = useAuth();
   const { toggleFavorite, isFavorite, getFavoriteCount } = useFavorites();
   const [characters, setCharacters] = useState<Character[]>([]);
   const [loading, setLoading] = useState(true);
@@ -24,13 +26,19 @@ const Characters: React.FC = () => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
     if (!token) return;
+    
     getCharacters(token)
       .then(setCharacters)
-      .catch(() => setError('Failed to load characters'))
+      .catch((error) => {
+        if (error.message === 'Invalid or expired token') {
+          logout();
+        } else {
+          setError('Failed to load characters');
+        }
+      })
       .finally(() => setLoading(false));
-  }, []);
+  }, [token, logout]);
 
   if (loading) return <div className="characters-title">Loading characters...</div>;
   if (error) return <div className="auth-error">{error}</div>;

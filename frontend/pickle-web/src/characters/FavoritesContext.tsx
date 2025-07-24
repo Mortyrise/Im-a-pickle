@@ -8,7 +8,7 @@ export interface FavoriteCharacter {
   image: string;
 }
 
-interface FavoritesContextType {
+export interface FavoritesContextType {
   favorites: FavoriteCharacter[];
   addToFavorites: (character: FavoriteCharacter) => void;
   removeFromFavorites: (characterId: number) => void;
@@ -17,7 +17,7 @@ interface FavoritesContextType {
   getFavoriteCount: () => number;
 }
 
-const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
+export const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
 
 interface FavoritesProviderProps {
   children: ReactNode;
@@ -88,10 +88,4 @@ export const FavoritesProvider: React.FC<FavoritesProviderProps> = ({ children }
   );
 };
 
-export const useFavorites = (): FavoritesContextType => {
-  const context = useContext(FavoritesContext);
-  if (context === undefined) {
-    throw new Error('useFavorites must be used within a FavoritesProvider');
-  }
-  return context;
-};
+

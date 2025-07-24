@@ -10,6 +10,8 @@ const characterController = new CharacterController();
  *   get:
  *     summary: Get characters from Rick and Morty API
  *     tags: [Characters]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: page
@@ -83,6 +85,8 @@ router.get('/', characterController.getCharacters.bind(characterController));
  *   get:
  *     summary: Get a single character by ID
  *     tags: [Characters]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id

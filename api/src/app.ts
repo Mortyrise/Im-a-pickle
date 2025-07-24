@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import authRoutes from './application/routes/authRoutes';
 import characterRoutes from './application/routes/characterRoutes';
+import { authenticateToken } from './application/middleware/auth';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 
@@ -25,6 +26,15 @@ const swaggerOptions = {
         url: 'http://localhost:' + PORT,
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
   },
   apis: ['./src/application/routes/*.ts'],
 };
@@ -33,7 +43,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 app.use('/auth', authRoutes);
-app.use('/api/characters', characterRoutes);
+app.use('/api/characters', authenticateToken, characterRoutes);
 
 
 

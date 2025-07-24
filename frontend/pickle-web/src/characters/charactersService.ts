@@ -24,14 +24,14 @@ export interface Character {
 
 export async function getCharacters(token: string): Promise<Character[]> {
   const data = await apiCaller<{ characters: Character[] }>(`${API_BASE_URL}/api/characters`, {
-    headers: { Authorization: `Bearer ${token}` },
+    token
   });
   return data.characters || [];
 }
 
 export async function getCharacterById(id: number, token: string): Promise<Character> {
   const data = await apiCaller<Character>(`${API_BASE_URL}/api/characters/${id}`, {
-    headers: { Authorization: `Bearer ${token}` },
+    token
   });
   return data;
 }

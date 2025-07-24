@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AuthForm.css';
 import { login as loginService, register as registerService } from './authService';
+import { useAuth } from './AuthContext';
 
 type Mode = 'login' | 'register';
 
 const AuthForm: React.FC = () => {
   const navigate = useNavigate();
+  const { login: authLogin } = useAuth();
   const [mode, setMode] = useState<Mode>('login');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -28,7 +30,7 @@ const AuthForm: React.FC = () => {
     try {
       if (mode === 'login') {
         const data = await loginService(email, password);
-        localStorage.setItem('token', data.access_token);
+        authLogin(data.access_token);
         setSuccess('Login successful!');
         setTimeout(() => navigate('/characters'), 0);
       } else {
