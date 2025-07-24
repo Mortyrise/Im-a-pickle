@@ -1,4 +1,5 @@
 import { externalApiCaller } from '../../infrastructure/utils/apiCaller';
+import { getRedisKey, setRedisKey } from '../../infrastructure/redis/RedisClient';
 
 export interface RickAndMortyCharacter {
   id: number;
@@ -56,15 +57,34 @@ export class RickAndMortyService {
 
     const queryString = params.toString();
     const endpoint = `/character${queryString ? `?${queryString}` : ''}`;
+    
+    const cacheKey = `api:rick_and_morty:characters:${queryString || 'all'}`;
+    const cachedData = await getRedisKey(cacheKey);
+    
+    if (cachedData) {
+      return JSON.parse(cachedData);
+    }
 
-    return await externalApiCaller.call<RickAndMortyResponse>(`${this.baseUrl}${endpoint}`);
+    const response = await externalApiCaller.call<RickAndMortyResponse>(`${this.baseUrl}${endpoint}`);
+    await setRedisKey(cacheKey, JSON.stringify(response), 3600);
+    
+    return response;
   }
 
   /**
    * Get a single character by ID
    */
   async getCharacterById(id: number): Promise<RickAndMortyCharacter> {
-    return await externalApiCaller.call<RickAndMortyCharacter>(`${this.baseUrl}/character/${id}`);
+    const cacheKey = `api:rick_and_morty:character:${id}`;
+    const cachedData = await getRedisKey(cacheKey);
+    
+    if (cachedData) {
+      return JSON.parse(cachedData);
+    }
+
+    const character = await externalApiCaller.call<RickAndMortyCharacter>(`${this.baseUrl}/character/${id}`);
+    await setRedisKey(cacheKey, JSON.stringify(character), 3600)
+    return character;
   }
 
   /**
@@ -72,6 +92,16 @@ export class RickAndMortyService {
    */
   async getCharactersByIds(ids: number[]): Promise<RickAndMortyCharacter[]> {
     const idsString = ids.join(',');
-    return await externalApiCaller.call<RickAndMortyCharacter[]>(`${this.baseUrl}/character/${idsString}`);
+    const cacheKey = `api:rick_and_morty:characters:multiple:${idsString}`;
+    const cachedData = await getRedisKey(cacheKey);
+    
+    if (cachedData) {
+      return JSON.parse(cachedData);
+    }
+
+    const characters = await externalApiCaller.call<RickAndMortyCharacter[]>(`${this.baseUrl}/character/${idsString}`);
+    await setRedisKey(cacheKey, JSON.stringify(characters), 3600);
+    
+    return characters;
   }
 }

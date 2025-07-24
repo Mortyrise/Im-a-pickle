@@ -16,6 +16,7 @@ services:
     command: sh -c "npm install && npm start"
     depends_on:
       - node
+      - redis
     restart: always
   redis:
     container_name: redis
@@ -49,6 +50,7 @@ services:
       DB_PORT: 5432
     depends_on:
       - db
+      - redis
     entrypoint: /app/entrypoint.sh
     volumes:
       - ./api:/app/
