@@ -4,9 +4,7 @@ import { RickAndMortyService, RickAndMortyCharacter } from '../services/RickAndM
 const rickAndMortyService = new RickAndMortyService();
 
 export class CharacterController {
-  /**
-   * Get characters from Rick and Morty API
-   */
+
   async getCharacters(req: Request, res: Response): Promise<void> {
     try {
       const { page = 1, name, status, species, gender } = req.query;
@@ -21,7 +19,7 @@ export class CharacterController {
 
       const response = await rickAndMortyService.getCharacters(filters);
       
-      // Return the complete character data for frontend flexibility
+
       res.json({
         characters: response.results,
         info: response.info
@@ -41,16 +39,14 @@ export class CharacterController {
     }
   }
 
-  /**
-   * Get a single character by ID
-   */
+
   async getCharacterById(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       
       const response = await rickAndMortyService.getCharacterById(Number(id));
       
-      // Return the complete character data
+
       res.json(response);
     } catch (error: any) {
       console.error('Error fetching character:', error);

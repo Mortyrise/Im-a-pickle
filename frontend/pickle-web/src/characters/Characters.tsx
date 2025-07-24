@@ -16,11 +16,11 @@ const Characters: React.FC = () => {
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   const scrollRef = useRef<HTMLUListElement>(null);
 
-  // Manejo del scroll horizontal con rueda del ratón
+
   const handleWheel = (e: React.WheelEvent) => {
     if (scrollRef.current) {
       e.preventDefault();
-      const scrollAmount = e.deltaY * 2; // Multiplica para hacer el scroll más sensible
+      const scrollAmount = e.deltaY * 2; 
       scrollRef.current.scrollLeft += scrollAmount;
     }
   };
@@ -43,7 +43,7 @@ const Characters: React.FC = () => {
   if (loading) return <div className="characters-title">Loading characters...</div>;
   if (error) return <div className="auth-error">{error}</div>;
 
-  // Filtrar personajes según si se muestran solo favoritos
+  
   const displayedCharacters = showOnlyFavorites 
     ? characters.filter(char => isFavorite(char.id))
     : characters;

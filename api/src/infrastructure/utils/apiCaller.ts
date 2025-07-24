@@ -49,5 +49,4 @@ export class ApiCaller {
   }
 }
 
-// Default instance for external APIs
 export const externalApiCaller = new ApiCaller();
