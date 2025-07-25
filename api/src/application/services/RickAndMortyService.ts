@@ -39,7 +39,10 @@ export class RickAndMortyService {
       results: response.results.map((char) => Character.fromApiResponse(char))
     };
 
-    await setRedisKey(cacheKey, JSON.stringify(response), 3600);
+    await setRedisKey(cacheKey, JSON.stringify({
+      info: response.info,
+      results: response.results
+    }), 3600);
     
     return charactersResponse;
   }
@@ -57,6 +60,7 @@ export class RickAndMortyService {
     const response = await this.apiService.fetchCharacterById(id);
     const character = Character.fromApiResponse(response);
     
+
     await setRedisKey(cacheKey, JSON.stringify(response), 3600);
     return character;
   }

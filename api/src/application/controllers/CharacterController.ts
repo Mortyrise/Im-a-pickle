@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { RickAndMortyService, RickAndMortyCharacter } from '../services/RickAndMortyService';
+import { RickAndMortyService } from '../services/RickAndMortyService';
 
 const rickAndMortyService = new RickAndMortyService();
 
@@ -19,9 +19,8 @@ export class CharacterController {
 
       const response = await rickAndMortyService.getCharacters(filters);
       
-
       res.json({
-        characters: response.results,
+        characters: response.results.map(char => char.toJSON()),
         info: response.info
       });
     } catch (error: any) {
@@ -46,8 +45,7 @@ export class CharacterController {
       
       const response = await rickAndMortyService.getCharacterById(Number(id));
       
-
-      res.json(response);
+      res.json(response.toJSON());
     } catch (error: any) {
       console.error('Error fetching character:', error);
       

@@ -30,7 +30,7 @@ export class Character {
     this.props = { ...props };
   }
 
-  
+
   get id(): number { 
     return this.props.id; 
   }
@@ -94,5 +94,22 @@ export class Character {
       url: apiData.url,
       created: apiData.created
     });
+  }
+
+  toJSON(): CharacterProps {
+    return {
+      id: this.id,
+      name: this.name,
+      status: this.status,
+      species: this.species,
+      type: this.type,
+      gender: this.gender,
+      origin: this.origin,
+      location: this.location,
+      image: this.image,
+      episode: this.episode,
+      url: this.url,
+      created: this.created
+    };
   }
 }
