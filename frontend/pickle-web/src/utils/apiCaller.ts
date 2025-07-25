@@ -29,7 +29,7 @@ export async function apiCaller<T = any>(endpoint: string, options: ApiCallerOpt
     case 'DELETE':
       break;
     default:
-      throw new Error(`Método HTTP no soportado: ${method}`);
+      throw new Error(`HTTP method not supported: ${method}`);
   }
 
   const response = await fetch(endpoint, fetchOptions);

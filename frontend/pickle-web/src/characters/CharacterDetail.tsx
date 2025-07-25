@@ -36,9 +36,14 @@ const CharacterDetail: React.FC = () => {
 
   return (
     <div className="character-detail-container">
-      <button className="back-button" onClick={() => navigate('/characters')}>
-        ← Back to Characters
-      </button>
+      <div className="character-detail-nav">
+        <button className="back-button" onClick={() => navigate('/characters')}>
+          ← Back to Characters
+        </button>
+        <button className="logout-button" onClick={logout} title="Logout">
+          Logout
+        </button>
+      </div>
       
       <div className="character-detail-card">
         <div className="character-detail-image">

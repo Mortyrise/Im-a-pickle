@@ -85,15 +85,24 @@ const Characters: React.FC = () => {
     <div className="characters-container">
       <div className="characters-header">
         <div className="characters-title">Characters</div>
-        <div className="favorites-controls">
-          <span className="favorites-count">
-            {getFavoriteCount()} favorites
-          </span>
+        <div className="header-controls">
+          <div className="favorites-controls">
+            <span className="favorites-count">
+              {getFavoriteCount()} favorites
+            </span>
+            <button 
+              className={`filter-button ${showOnlyFavorites ? 'active' : ''}`}
+              onClick={() => setShowOnlyFavorites(!showOnlyFavorites)}
+            >
+              {showOnlyFavorites ? 'Show All' : 'Show Favorites'}
+            </button>
+          </div>
           <button 
-            className={`filter-button ${showOnlyFavorites ? 'active' : ''}`}
-            onClick={() => setShowOnlyFavorites(!showOnlyFavorites)}
+            className="logout-button"
+            onClick={logout}
+            title="Logout"
           >
-            {showOnlyFavorites ? 'Show All' : 'Show Favorites'}
+            Logout
           </button>
         </div>
       </div>
