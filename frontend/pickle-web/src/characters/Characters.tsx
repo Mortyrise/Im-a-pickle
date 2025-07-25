@@ -6,6 +6,22 @@ import { useFavorites } from './useFavorites';
 import { useAuth } from '../auth/AuthContext';
 import FavoriteButton from './FavoriteButton';
 
+const useDebounce = (value: string, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
+
 const Characters: React.FC = () => {
   const navigate = useNavigate();
   const { token, logout } = useAuth();
@@ -13,24 +29,32 @@ const Characters: React.FC = () => {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [searching, setSearching] = useState(false);
   const [error, setError] = useState('');
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(true);
   const scrollRef = useRef<HTMLUListElement>(null);
   const lastCharacterRef = useRef<HTMLLIElement>(null);
 
-  const loadCharacters = useCallback(async (page: number, isLoadingMore = false) => {
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
+  const loadCharacters = useCallback(async (page: number, isLoadingMore = false, searchQuery = '') => {
     if (!token) return;
     
     try {
       if (isLoadingMore) {
         setLoadingMore(true);
       } else {
-        setLoading(true);
+        if (searchQuery.trim()) {
+          setSearching(true);
+        } else {
+          setLoading(true);
+        }
       }
-
-      const response = await getCharacters(token, page);
+      setError('');
+      const response = await getCharacters(token, page, searchQuery);
       
       if (isLoadingMore) {
         setCharacters(prev => [...prev, ...response.characters]);
@@ -44,25 +68,40 @@ const Characters: React.FC = () => {
       if (error.message === 'Invalid or expired token') {
         logout();
       } else {
-        setError('Failed to load characters');
+        if (searchQuery.trim()) {
+          setCharacters([]);
+          setHasNextPage(false);
+        } else {
+          setError('Failed to load characters');
+        }
       }
     } finally {
       setLoading(false);
       setLoadingMore(false);
+      setSearching(false);
     }
   }, [token, logout]);
 
   useEffect(() => {
-    loadCharacters(1);
-  }, [loadCharacters]);
+    loadCharacters(1, false, debouncedSearchTerm);
+  }, [loadCharacters, debouncedSearchTerm]);
 
   useEffect(() => {
-    if (!lastCharacterRef.current || !hasNextPage || loadingMore) return;
+    if (searchTerm !== debouncedSearchTerm && searchTerm.trim()) {
+      setSearching(true);
+    }
+    if (searchTerm !== debouncedSearchTerm) {
+      setError('');
+    }
+  }, [searchTerm, debouncedSearchTerm]);
+
+  useEffect(() => {
+    if (!lastCharacterRef.current || !hasNextPage || loadingMore || debouncedSearchTerm) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          loadCharacters(currentPage + 1, true);
+          loadCharacters(currentPage + 1, true, debouncedSearchTerm);
         }
       },
       { threshold: 0.1 }
@@ -71,15 +110,17 @@ const Characters: React.FC = () => {
     observer.observe(lastCharacterRef.current);
 
     return () => observer.disconnect();
-  }, [characters, hasNextPage, loadingMore, currentPage, loadCharacters]);
+  }, [characters, hasNextPage, loadingMore, currentPage, loadCharacters, debouncedSearchTerm]);
 
   if (loading) return <div className="characters-title">Loading characters...</div>;
   if (error) return <div className="auth-error">{error}</div>;
 
-  
   const displayedCharacters = showOnlyFavorites 
     ? characters.filter(char => isFavorite(char.id))
     : characters;
+
+  const hasSearchTerm = debouncedSearchTerm.trim();
+  const noSearchResults = hasSearchTerm && displayedCharacters.length === 0 && !searching;
 
   return (
     <div className="characters-container">
@@ -115,7 +156,7 @@ const Characters: React.FC = () => {
       )}
       
       <ul 
-        className="characters-list" 
+        className={`characters-list ${searching ? 'searching' : ''}`}
         ref={scrollRef}
       >
         {displayedCharacters.map((c, index) => (
@@ -150,7 +191,35 @@ const Characters: React.FC = () => {
             <div className="loading-spinner">Loading more...</div>
           </li>
         )}
+
+        {noSearchResults && (
+          <li className="no-search-results-item">
+            <div className="no-search-results-content">
+              <p>No characters found for "{debouncedSearchTerm}"</p>
+              <p>Try a different search term or check your spelling.</p>
+            </div>
+          </li>
+        )}
       </ul>
+      
+      <div className="search-section">
+        <div className="search-controls">
+          <div className="search-input-container">
+            <input
+              type="text"
+              placeholder={searching ? "Searching..." : "Search characters..."}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className={`search-input ${searching ? 'searching' : ''}`}
+            />
+            {searching && (
+              <div className="search-spinner">
+                <div className="spinner"></div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

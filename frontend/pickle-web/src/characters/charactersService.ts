@@ -32,8 +32,13 @@ export interface CharactersResponse {
   };
 }
 
-export async function getCharacters(token: string, page: number = 1): Promise<CharactersResponse> {
-  const data = await apiCaller<CharactersResponse>(`${API_BASE_URL}/api/characters?page=${page}`, {
+export async function getCharacters(token: string, page: number = 1, searchTerm: string = ''): Promise<CharactersResponse> {
+  let url = `${API_BASE_URL}/api/characters?page=${page}`;
+  if (searchTerm.trim()) {
+    url += `&name=${encodeURIComponent(searchTerm.trim())}`;
+  }
+  
+  const data = await apiCaller<CharactersResponse>(url, {
     token
   });
   return data;
