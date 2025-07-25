@@ -16,15 +16,6 @@ const Characters: React.FC = () => {
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   const scrollRef = useRef<HTMLUListElement>(null);
 
-
-  const handleWheel = (e: React.WheelEvent) => {
-    if (scrollRef.current) {
-      e.preventDefault();
-      const scrollAmount = e.deltaY * 2; 
-      scrollRef.current.scrollLeft += scrollAmount;
-    }
-  };
-
   useEffect(() => {
     if (!token) return;
     
@@ -75,7 +66,6 @@ const Characters: React.FC = () => {
       <ul 
         className="characters-list" 
         ref={scrollRef}
-        onWheel={handleWheel}
       >
         {displayedCharacters.map(c => (
           <li key={c.id} className="character-item" onClick={() => navigate(`/characters/${c.id}`)}>

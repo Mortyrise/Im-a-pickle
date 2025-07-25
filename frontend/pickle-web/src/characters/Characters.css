@@ -154,11 +154,6 @@
   scroll-behavior: smooth;
   padding-bottom: 2rem;
   scroll-snap-type: x mandatory;
-  cursor: grab;
-}
-
-.characters-list:active {
-  cursor: grabbing;
 }
 
 .characters-list::-webkit-scrollbar {
@@ -182,6 +177,7 @@
   background: linear-gradient(90deg, #00b891, #3b82f6);
   background-clip: content-box;
 }
+
 .character-item {
   min-width: 320px;
   height: 450px;
