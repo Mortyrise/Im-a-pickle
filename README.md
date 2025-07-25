@@ -1,6 +1,54 @@
 # Rick and Morty Character Explorer 🛸
 
-A full-stack web application to explore and save your favorite characters from the Rick and Morty universe!
+A full-stack web appl## 🏗️ What's Inside
+
+- **Frontend**: React wit## 🏗️ What's Inside
+
+- **Frontend**: React with TypeScript (Port 3000)
+- **Backend**: Node.js API with authentication (Port 3001)
+- **Database**: PostgreSQL for user data
+- **Cache**: Redis for fast character loading
+- **Testing**: Jest unit tests with clean architecture focus
+- **Architecture**: Domain-Driven Design with separation of concerns
+
+## 🛑 Stopping the Applicationript (Port 3000)
+- **Backend**: Node.js API with authentication (Port 3001)
+- **Database**: PostgreSQL for user data
+- **Cache**: Redis for fast character loading
+- **Testing**: Jest unit tests for reliability
+
+## 🧪 Testing
+
+The backend includes comprehensive **unit tests** for the domain layer following clean architecture principles:
+
+### Domain Tests
+- **Character Model**: Tests immutability, API data transformation, and serialization
+- **Edge Cases**: Handles missing or null fields from external APIs
+- **Factory Methods**: Validates `fromApiResponse` data transformations
+- **JSON Serialization**: Ensures proper `toJSON()` output for frontend communication
+
+### Running Tests
+
+```bash
+# Run all tests
+docker exec api npm test
+
+# Run only domain unit tests
+docker exec api npm run test:domain
+
+### Test Structure
+```
+api/src/test/
+├── domain/
+│   └── Character.unit.test.ts    # Character domain model tests
+└── mocks/
+    └── characterMocks.ts         # Centralized test data
+```
+
+The tests focus on **behavior over implementation**, avoiding trivial getter tests and emphasizing business logic validation.
+
+
+## 🛑 Stopping the Applicationto explore and save your favorite characters from the Rick and Morty universe!
 
 ![Application Screenshot](./docs/login-screen.png)
 
