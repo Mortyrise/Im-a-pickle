@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Characters.css';
-import { getCharacters, Character } from './charactersService';
+import { getCharacters, Character, CharactersResponse } from './charactersService';
 import { useFavorites } from './useFavorites';
 import { useAuth } from '../auth/AuthContext';
 import FavoriteButton from './FavoriteButton';
@@ -12,24 +12,66 @@ const Characters: React.FC = () => {
   const { toggleFavorite, isFavorite, getFavoriteCount } = useFavorites();
   const [characters, setCharacters] = useState<Character[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState('');
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(true);
   const scrollRef = useRef<HTMLUListElement>(null);
+  const lastCharacterRef = useRef<HTMLLIElement>(null);
 
-  useEffect(() => {
+  const loadCharacters = useCallback(async (page: number, isLoadingMore = false) => {
     if (!token) return;
     
-    getCharacters(token)
-      .then(setCharacters)
-      .catch((error) => {
-        if (error.message === 'Invalid or expired token') {
-          logout();
-        } else {
-          setError('Failed to load characters');
-        }
-      })
-      .finally(() => setLoading(false));
+    try {
+      if (isLoadingMore) {
+        setLoadingMore(true);
+      } else {
+        setLoading(true);
+      }
+
+      const response = await getCharacters(token, page);
+      
+      if (isLoadingMore) {
+        setCharacters(prev => [...prev, ...response.characters]);
+      } else {
+        setCharacters(response.characters);
+      }
+      
+      setHasNextPage(!!response.info.next);
+      setCurrentPage(page);
+    } catch (error: any) {
+      if (error.message === 'Invalid or expired token') {
+        logout();
+      } else {
+        setError('Failed to load characters');
+      }
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
   }, [token, logout]);
+
+  useEffect(() => {
+    loadCharacters(1);
+  }, [loadCharacters]);
+
+  useEffect(() => {
+    if (!lastCharacterRef.current || !hasNextPage || loadingMore) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadCharacters(currentPage + 1, true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(lastCharacterRef.current);
+
+    return () => observer.disconnect();
+  }, [characters, hasNextPage, loadingMore, currentPage, loadCharacters]);
 
   if (loading) return <div className="characters-title">Loading characters...</div>;
   if (error) return <div className="auth-error">{error}</div>;
@@ -67,8 +109,13 @@ const Characters: React.FC = () => {
         className="characters-list" 
         ref={scrollRef}
       >
-        {displayedCharacters.map(c => (
-          <li key={c.id} className="character-item" onClick={() => navigate(`/characters/${c.id}`)}>
+        {displayedCharacters.map((c, index) => (
+          <li 
+            key={c.id} 
+            className="character-item" 
+            onClick={() => navigate(`/characters/${c.id}`)}
+            ref={index === displayedCharacters.length - 3 ? lastCharacterRef : null}
+          >
             {c.image && <img src={c.image} alt={c.name} className="character-img" />}
             <div className="character-info">
               <div className="character-header-inline">
@@ -88,6 +135,12 @@ const Characters: React.FC = () => {
             </div>
           </li>
         ))}
+        
+        {loadingMore && (
+          <li className="character-item loading-more">
+            <div className="loading-spinner">Loading more...</div>
+          </li>
+        )}
       </ul>
     </div>
   );

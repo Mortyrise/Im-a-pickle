@@ -150,10 +150,17 @@
   display: flex;
   gap: 2rem;
   overflow-x: auto;
-  overflow-y: visible;
+  overflow-y: hidden;
   scroll-behavior: smooth;
   padding-bottom: 2rem;
   scroll-snap-type: x mandatory;
+  cursor: grab;
+  height: 490px;
+  max-height: 490px;
+}
+
+.characters-list:active {
+  cursor: grabbing;
 }
 
 .characters-list::-webkit-scrollbar {
@@ -177,7 +184,6 @@
   background: linear-gradient(90deg, #00b891, #3b82f6);
   background-clip: content-box;
 }
-
 .character-item {
   min-width: 320px;
   height: 450px;

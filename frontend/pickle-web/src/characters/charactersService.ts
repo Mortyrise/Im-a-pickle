@@ -22,11 +22,21 @@ export interface Character {
   created: string;
 }
 
-export async function getCharacters(token: string): Promise<Character[]> {
-  const data = await apiCaller<{ characters: Character[] }>(`${API_BASE_URL}/api/characters`, {
+export interface CharactersResponse {
+  characters: Character[];
+  info: {
+    count: number;
+    pages: number;
+    next: string | null;
+    prev: string | null;
+  };
+}
+
+export async function getCharacters(token: string, page: number = 1): Promise<CharactersResponse> {
+  const data = await apiCaller<CharactersResponse>(`${API_BASE_URL}/api/characters?page=${page}`, {
     token
   });
-  return data.characters || [];
+  return data;
 }
 
 export async function getCharacterById(id: number, token: string): Promise<Character> {
