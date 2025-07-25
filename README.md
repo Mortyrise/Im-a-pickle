@@ -22,9 +22,11 @@ A full-stack web application to explore and save your favorite characters from t
 
 1. **Clone the repository**:
    ```bash
-   git clone <repository-url>
+   # HTTPS
+   git clone https://github.com/Mortyrise/Im-a-pickle.git
+   # or SSH
+   git clone git@github.com:Mortyrise/Im-a-pickle.git
    cd RickAndMortyRepo
-   ```
 
 2. **Start the application**:
    ```bash
@@ -36,6 +38,18 @@ A full-stack web application to explore and save your favorite characters from t
 4. **Create an account** or login with existing credentials
 
 5. **Start exploring!** Browse characters and add your favorites 🎉
+
+## 📚 API Documentation
+
+The API comes with interactive Swagger documentation! After starting the application:
+
+- **Swagger UI**: `http://localhost:3001/api-docs`
+
+Here you can:
+- 🔍 Explore all available endpoints
+- 🧪 Test API calls directly from the browser
+- 📖 View request/response schemas
+- 🔐 Test authentication endpoints
 
 ## 🎮 How to Use
 
