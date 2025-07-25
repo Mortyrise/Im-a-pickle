@@ -1,82 +1,72 @@
-# Rick and Morty Character Explorer
+# Rick and Morty Character Explorer 🛸
 
-A web application to explore all the characters from the Rick and Morty series! Browse through the multiverse and discover your favorite characters with this easy-to-use interface.
+A full-stack web application to explore and save your favorite characters from the Rick and Morty universe!
 
-## What This App Does
+![Application Screenshot](./docs/login-screen.png)
 
-This is a Rick and Morty themed web application where you can:
-- View all characters from the series
-- Explore character details and information
-- Browse through the vast Rick and Morty universe
+## ✨ Features
 
-The app is built with Node.js and uses Docker for easy setup, so you can get it running quickly without any complicated configuration.
+- **Browse Characters**: Explore all Rick and Morty characters with their details
+- **Favorites System**: Save and manage your favorite characters
+- **User Authentication**: Secure login and registration
+- **Fast Performance**: Redis caching for lightning-fast loading
+- **Responsive Design**: Works perfectly on desktop and mobile
 
-## Architecture
+## 🚀 Quick Start
 
-This project consists of three main services:
-
-- **Web App (Node.js)**: The main application running on port 3000
-- **Database (PostgreSQL)**: Stores all the character data
-- **Cache (Redis)**: Makes the app faster by caching frequently accessed data
-
-## Prerequisites
-
+### Prerequisites
 - Docker
 - Docker Compose
 
-## Quick Start
+### Running the Application
 
-1. Clone the repository:
+1. **Clone the repository**:
    ```bash
    git clone <repository-url>
    cd RickAndMortyRepo
    ```
 
-2. Start the application:
+2. **Start the application**:
    ```bash
-   docker-compose up -d
+   docker compose up -d
    ```
 
-3. Open your browser and go to `http://localhost:3000`
+3. **Open your browser** and go to: `http://localhost:3000`
 
-That's it! Start exploring the Rick and Morty universe! 🛸
+4. **Create an account** or login with existing credentials
 
-## Services
+5. **Start exploring!** Browse characters and add your favorites 🎉
 
-### API Server
+## 🎮 How to Use
 
-- **Port**: 3000
-- **Purpose**: Serves the Rick and Morty character data
-- **Dependencies**: PostgreSQL, Redis
+1. **Register/Login**: Create an account or sign in
+2. **Browse Characters**: Scroll through the character list
+3. **Add Favorites**: Click the portal button (⭕) to save favorites
+4. **Filter**: Toggle between "Show All" and "Show Favorites"
+5. **View Details**: Click on any character for more information
 
-## Development
+## 🏗️ What's Inside
 
-The API code should be placed in the `./api` directory. The container will automatically mount this directory and use the entrypoint script for initialization.
+- **Frontend**: React with TypeScript (Port 3000)
+- **Backend**: Node.js API with authentication (Port 3001)
+- **Database**: PostgreSQL for user data
+- **Cache**: Redis for fast character loading
 
-## File Structure
-
-```
-RickAndMortyRepo/
-├── api/                 # Node.js application code
-├── docker-compose.yml   # Docker services configuration
-├── .gitignore          # Git ignore rules
-└── README.md           # This file
-```
-
-## Stopping the Application
+## � Stopping the Application
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
-To completely reset and remove all data:
+## 🐛 Troubleshooting
 
-```bash
-docker-compose down -v
-```
+If something doesn't work:
 
-## Notes
+1. Make sure ports 3000 and 3001 are available
+2. Wait a few seconds for all services to start
+3. Check logs: `docker compose logs`
+4. Restart: `docker compose restart`
 
-- All services are configured to restart automatically if they crash
-- Character data is safely stored and persists between restarts
-- The app is optimized with caching for better performance
+---
+
+**Enjoy exploring the Rick and Morty universe! 🚀✨**
