@@ -1,12 +1,15 @@
-import { externalApiCaller } from '../../infrastructure/utils/apiCaller';
 import { getRedisKey, setRedisKey } from '../../infrastructure/redis/RedisClient';
 import { Character } from '../../domain/models/Character';
 import { CharactersResponse, CharacterFilters } from '../../domain/interfaces/CharacterInterfaces';
+import { RickAndMortyApiService } from '../../infrastructure/services/RickAndMortyApiService';
 
 export class RickAndMortyService {
-  private readonly baseUrl = 'https://rickandmortyapi.com/api';
+  private readonly apiService: RickAndMortyApiService;
 
- 
+  constructor() {
+    this.apiService = new RickAndMortyApiService();
+  }
+
   async getCharacters(filters: CharacterFilters = {}): Promise<CharactersResponse> {
     const params = new URLSearchParams();
     
@@ -17,7 +20,6 @@ export class RickAndMortyService {
     if (filters.gender) params.append('gender', filters.gender);
 
     const queryString = params.toString();
-    const endpoint = `/character${queryString ? `?${queryString}` : ''}`;
     
     const cacheKey = `api:rick_and_morty:characters:${queryString || 'all'}`;
     const cachedData = await getRedisKey(cacheKey);
@@ -30,14 +32,14 @@ export class RickAndMortyService {
       };
     }
 
-    const response = await externalApiCaller.call<any>(`${this.baseUrl}${endpoint}`);
+    const response = await this.apiService.fetchCharacters(queryString);
     
     const charactersResponse: CharactersResponse = {
       info: response.info,
-      results: response.results.map((char: any) => Character.fromApiResponse(char))
+      results: response.results.map((char) => Character.fromApiResponse(char))
     };
 
-    await setRedisKey(cacheKey, JSON.stringify(response), 3600); // Cache raw API response
+    await setRedisKey(cacheKey, JSON.stringify(response), 3600);
     
     return charactersResponse;
   }
@@ -52,14 +54,13 @@ export class RickAndMortyService {
       return Character.fromApiResponse(parsedData);
     }
 
-    const response = await externalApiCaller.call<any>(`${this.baseUrl}/character/${id}`);
+    const response = await this.apiService.fetchCharacterById(id);
     const character = Character.fromApiResponse(response);
     
     await setRedisKey(cacheKey, JSON.stringify(response), 3600);
     return character;
   }
 
- 
   async getCharactersByIds(ids: number[]): Promise<Character[]> {
     const idsString = ids.join(',');
     const cacheKey = `api:rick_and_morty:characters:multiple:${idsString}`;
@@ -72,9 +73,9 @@ export class RickAndMortyService {
         : [Character.fromApiResponse(parsedData)];
     }
 
-    const response = await externalApiCaller.call<any>(`${this.baseUrl}/character/${idsString}`);
+    const response = await this.apiService.fetchCharactersByIds(idsString);
     const characters = Array.isArray(response) 
-      ? response.map((char: any) => Character.fromApiResponse(char))
+      ? response.map((char) => Character.fromApiResponse(char))
       : [Character.fromApiResponse(response)];
     
     await setRedisKey(cacheKey, JSON.stringify(response), 3600);
