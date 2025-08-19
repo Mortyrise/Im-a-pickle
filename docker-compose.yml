@@ -5,7 +5,6 @@ services:
     container_name: frontend
     volumes:
       - ./frontend/pickle-web:/app
-      - /app/node_modules
     ports:
       - "3000:3000"
     environment:
